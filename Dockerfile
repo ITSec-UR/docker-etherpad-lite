@@ -15,7 +15,8 @@ RUN mkdir ${ETHERPAD_INSTALLDIR} \
  && curl -SL https://github.com/ether/etherpad-lite/archive/${ETHERPAD_VERSION}.zip > etherpad.zip \
  && unzip etherpad -d ${ETHERPAD_INSTALLDIR} \
  && mv ${ETHERPAD_INSTALLDIR}/etherpad-lite-${ETHERPAD_VERSION}/* ${ETHERPAD_INSTALLDIR} \
- && rm -r etherpad.zip ${ETHERPAD_INSTALLDIR}/etherpad-lite-${ETHERPAD_VERSION} 
+ && rm -r etherpad.zip ${ETHERPAD_INSTALLDIR}/etherpad-lite-${ETHERPAD_VERSION} \
+ && ln -s /usr/bin/nodejs /usr/bin/node
 
 VOLUME ${ETHERPAD_DATADIR}
 

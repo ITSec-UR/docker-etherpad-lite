@@ -6,37 +6,30 @@ if [ -z "$MYSQL_NAME" ]; then
   exit 1
 fi
 
-# if we're linked to MySQL, and we're using the root user, and our linked
-# container has a default "root" password set up and passed through... :)
-: ${ETHERPAD_DB_USER:=root}
-if [ "$ETHERPAD_DB_USER" = 'root' ]; then
-	: ${ETHERPAD_DB_PASSWORD:=$MYSQL_ENV_MYSQL_ROOT_PASSWORD}
-fi
-: ${ETHERPAD_DB_NAME:=etherpad}
-
-ETHERPAD_DB_NAME=$( echo $ETHERPAD_DB_NAME | sed 's/\./_/g' )
-
 if [ -z "$ETHERPAD_DB_PASSWORD" ]; then
-	echo "ETHERPAD_DB_PASSWORD not set!"
-	exit 1
+  echo "ETHERPAD_DB_PASSWORD not set. Please supply a password for the new user!"
+  exit 1
 fi
 
 : ${ETHERPAD_TITLE:=Etherpad}
 : ${ETHERPAD_PORT:=9001}
+: ${ETHERPAD_DB_USER:=etherpad}
+: ${ETHERPAD_DB_NAME:=etherpad}
+: ${ETHERPAD_MYSQL_SETUP_USER:=root}
+: ${ETHERPAD_MYSQL_SETUP_PASSWORD:=$MYSQL_ENV_MYSQL_ROOT_PASSWORD}
 : ${ETHERPAD_SESSION_KEY:=$(
 		node -p "require('crypto').randomBytes(32).toString('hex')")}
 
 # Check if database already exists
-RESULT=`mysql -u${ETHERPAD_DB_USER} -p${ETHERPAD_DB_PASSWORD} \
-	-hmysql --skip-column-names \
-	-e "SHOW DATABASES LIKE '${ETHERPAD_DB_NAME}'"`
+RESULT=$(mysql -u${ETHERPAD_MYSQL_SETUP_USER} -p${ETHERPAD_MYSQL_SETUP_PASSWORD} -hmysql --skip-column-names \
+	-e "SHOW DATABASES LIKE '${ETHERPAD_DB_NAME}'")
 
 if [ "$RESULT" != $ETHERPAD_DB_NAME ]; then
 	# mysql database does not exist, create it
 	echo "Creating database ${ETHERPAD_DB_NAME}"
 
-	mysql -u${ETHERPAD_DB_USER} -p${ETHERPAD_DB_PASSWORD} -hmysql \
-	      -e "create database ${ETHERPAD_DB_NAME}"
+	mysql -u${ETHERPAD_MYSQL_SETUP_USER} -p${ETHERPAD_MYSQL_SETUP_PASSWORD} -hmysql \
+	    -e "create database ${ETHERPAD_DB_NAME}; grant all on ${ETHERPAD_DB_NAME}.* to '${ETHERPAD_DB_USER}'@'%' identified by '${ETHERPAD_DB_PASSWORD}' with grant option;"
 fi
 
 if [ ! -f $ETHERPAD_DATADIR/settings.json ]; then
@@ -75,7 +68,7 @@ if [ ! -f $ETHERPAD_DATADIR/settings.json ]; then
 	EOF
 fi
 
-ln -s /usr/bin/nodejs /usr/bin/node
+ln -s $ETHERPAD_DATADIR/settings.json $ETHERPAD_INSTALLDIR/settings.json 
 
 chown -RL etherpad-lite:etherpad-lite $ETHERPAD_INSTALLDIR $ETHERPAD_DATADIR
 exec start-stop-daemon --start --chuid etherpad-lite:etherpad-lite --exec $ETHERPAD_INSTALLDIR/bin/run.sh -- --settings $ETHERPAD_DATADIR/settings.json
