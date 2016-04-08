@@ -8,11 +8,11 @@ fi
 
 # if we're linked to MySQL, and we're using the root user, and our linked
 # container has a default "root" password set up and passed through... :)
-${ETHERPAD_DB_USER:=root}
+: ${ETHERPAD_DB_USER:=root}
 if [ "$ETHERPAD_DB_USER" = 'root' ]; then
-	${ETHERPAD_DB_PASSWORD:=$MYSQL_ENV_MYSQL_ROOT_PASSWORD}
+	: ${ETHERPAD_DB_PASSWORD:=$MYSQL_ENV_MYSQL_ROOT_PASSWORD}
 fi
-${ETHERPAD_DB_NAME:=etherpad}
+: ${ETHERPAD_DB_NAME:=etherpad}
 
 ETHERPAD_DB_NAME=$( echo $ETHERPAD_DB_NAME | sed 's/\./_/g' )
 
@@ -21,9 +21,9 @@ if [ -z "$ETHERPAD_DB_PASSWORD" ]; then
 	exit 1
 fi
 
-${ETHERPAD_TITLE:=Etherpad}
-${ETHERPAD_PORT:=9001}
-${ETHERPAD_SESSION_KEY:=$(
+: ${ETHERPAD_TITLE:=Etherpad}
+: ${ETHERPAD_PORT:=9001}
+: ${ETHERPAD_SESSION_KEY:=$(
 		node -p "require('crypto').randomBytes(32).toString('hex')")}
 
 # Check if database already exists
