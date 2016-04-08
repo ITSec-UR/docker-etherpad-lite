@@ -8,14 +8,11 @@ ENV ETHERPAD_VERSION="1.5.7" \
 RUN useradd -r -m etherpad-lite
 
 RUN apt-get update \
- && apt-get install -y unzip gzip git curl python libssl-dev pkg-config build-essential nodejs npm mysql-client \
+ && apt-get install -y gzip git curl python libssl-dev pkg-config build-essential nodejs npm mysql-client \
  && rm -r /var/lib/apt/lists/*
 
 RUN mkdir ${ETHERPAD_INSTALLDIR} \
- && curl -SL https://github.com/ether/etherpad-lite/archive/${ETHERPAD_VERSION}.zip > etherpad.zip \
- && unzip etherpad -d ${ETHERPAD_INSTALLDIR} \
- && mv ${ETHERPAD_INSTALLDIR}/etherpad-lite-${ETHERPAD_VERSION}/* ${ETHERPAD_INSTALLDIR} \
- && rm -r etherpad.zip ${ETHERPAD_INSTALLDIR}/etherpad-lite-${ETHERPAD_VERSION} \
+ && git clone --branch ${ETHERPAD_VERSION} git://github.com/ether/etherpad-lite.git ${ETHERPAD_INSTALLDIR} \
  && ln -s /usr/bin/nodejs /usr/bin/node
 
 VOLUME ${ETHERPAD_DATADIR}

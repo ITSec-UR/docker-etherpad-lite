@@ -17,8 +17,6 @@ fi
 : ${ETHERPAD_DB_NAME:=etherpad}
 : ${ETHERPAD_MYSQL_SETUP_USER:=root}
 : ${ETHERPAD_MYSQL_SETUP_PASSWORD:=$MYSQL_ENV_MYSQL_ROOT_PASSWORD}
-: ${ETHERPAD_SESSION_KEY:=$(
-		node -p "require('crypto').randomBytes(32).toString('hex')")}
 
 # Check if database already exists
 RESULT=$(mysql -u${ETHERPAD_MYSQL_SETUP_USER} -p${ETHERPAD_MYSQL_SETUP_PASSWORD} -hmysql --skip-column-names \
@@ -39,7 +37,6 @@ if [ ! -f $ETHERPAD_DATADIR/settings.json ]; then
 	  "title": "${ETHERPAD_TITLE}",
 	  "ip": "0.0.0.0",
 	  "port" : ${ETHERPAD_PORT},
-	  "sessionKey" : "${ETHERPAD_SESSION_KEY}",
 	  "dbType" : "mysql",
 	  "dbSettings" : {
 			    "user"    : "${ETHERPAD_DB_USER}",
