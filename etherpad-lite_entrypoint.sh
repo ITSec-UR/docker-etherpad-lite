@@ -77,4 +77,4 @@ fi
 
 # Set correct ownership and start Teamspeak server
 chown -RL etherpad-lite:etherpad-lite $ETHERPAD_INSTALLDIR $ETHERPAD_DATADIR
-exec start-stop-daemon --start --chuid etherpad-lite:etherpad-lite --exec $TEAMSPEAK_INSTALLDIR/bin/run.sh --settings $ETHERPAD_DATADIR/settings.json
+exec start-stop-daemon --start --chuid etherpad-lite:etherpad-lite --exec $TEAMSPEAK_INSTALLDIR/bin/run.sh -- --settings $ETHERPAD_DATADIR/settings.json
