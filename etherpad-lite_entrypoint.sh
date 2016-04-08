@@ -75,5 +75,7 @@ if [ ! -f $ETHERPAD_DATADIR/settings.json ]; then
 	EOF
 fi
 
-chown -RL etherpad-lite:etherpad-lite $ETHERPAD_INSTALLDIR $ETHERPAD_DATADIR ~/.npm /usr/local/lib/node_modules
+ln -s /usr/bin/nodejs /usr/bin/node
+
+chown -RL etherpad-lite:etherpad-lite $ETHERPAD_INSTALLDIR $ETHERPAD_DATADIR
 exec start-stop-daemon --start --chuid etherpad-lite:etherpad-lite --exec $ETHERPAD_INSTALLDIR/bin/run.sh -- --settings $ETHERPAD_DATADIR/settings.json

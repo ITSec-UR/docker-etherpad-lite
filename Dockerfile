@@ -5,8 +5,7 @@ ENV ETHERPAD_VERSION="1.5.7" \
 	ETHERPAD_INSTALLDIR="/opt/etherpad-lite" \
 	ETHERPAD_DATADIR="/var/lib/etherpad-lite"
 	
-RUN groupadd -r etherpad-lite \
- && useradd -r -g etherpad-lite etherpad-lite
+RUN useradd -r -m etherpad-lite
 
 RUN apt-get update \
  && apt-get install -y unzip gzip git curl python libssl-dev pkg-config build-essential nodejs npm mysql-client \
