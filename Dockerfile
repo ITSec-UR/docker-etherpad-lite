@@ -3,13 +3,13 @@ MAINTAINER Philipp Holler <philipp.holler93@googlemail.com>
 
 ENV ETHERPAD_VERSION="1.5.7" \
 	ETHERPAD_INSTALLDIR="/opt/etherpad-lite" \
-	ETHERPAD_DATADIR="/var/lib/etherpad"
+	ETHERPAD_DATADIR="/var/lib/etherpad-lite"
 	
 RUN groupadd -r etherpad-lite \
  && useradd -r -g etherpad-lite etherpad-lite
 
 RUN apt-get update \
- && apt-get install -y unzip gzip git curl python libssl-dev pkg-config build-essential nodejs mysql-client \
+ && apt-get install -y unzip gzip git curl python libssl-dev pkg-config build-essential nodejs npm mysql-client \
  && rm -r /var/lib/apt/lists/*
 
 RUN mkdir ${ETHERPAD_INSTALLDIR} \
