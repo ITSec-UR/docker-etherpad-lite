@@ -65,7 +65,5 @@ if [ ! -f $ETHERPAD_DATADIR/settings.json ]; then
 	EOF
 fi
 
-ln -s $ETHERPAD_DATADIR/settings.json $ETHERPAD_INSTALLDIR/settings.json 
-
 chown -RL etherpad-lite:etherpad-lite $ETHERPAD_INSTALLDIR $ETHERPAD_DATADIR
 exec start-stop-daemon --start --chuid etherpad-lite:etherpad-lite --exec $ETHERPAD_INSTALLDIR/bin/run.sh -- --settings $ETHERPAD_DATADIR/settings.json
