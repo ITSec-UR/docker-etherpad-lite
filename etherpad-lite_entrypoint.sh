@@ -11,8 +11,9 @@ if [ -z "$ETHERPAD_DB_PASSWORD" ]; then
   exit 1
 fi
 
-if [ ! -z "$ADDITIONAL_PACKAGES" ]; then
+if [ ! -z "$ADDITIONAL_PACKAGES" ] && [ ! -f /tmp/package_installed ]; then
 	apt-get update; apt-get install -y $ADDITIONAL_PACKAGES; rm -r /var/lib/apt/lists/*
+	touch /tmp/package_installed
 fi
 
 : ${ETHERPAD_TITLE:=Etherpad}
