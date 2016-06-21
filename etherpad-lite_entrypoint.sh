@@ -11,6 +11,10 @@ if [ -z "$ETHERPAD_DB_PASSWORD" ]; then
   exit 1
 fi
 
+if [ ! -z "$ADDITIONAL_PACKAGES" ]; then
+        apt-get update; apt-get install $ADDITIONAL_PACKAGES; rm -r /var/lib/apt/lists/*
+fi
+
 : ${ETHERPAD_TITLE:=Etherpad}
 : ${ETHERPAD_PORT:=9001}
 : ${ETHERPAD_DB_USER:=etherpad}
